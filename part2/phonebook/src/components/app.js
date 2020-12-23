@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas" },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
+  const [newPhone, setPhone] = useState("");
   const handleSubmit = (event) => {
     event.preventDefault();
-    const newObj = { name: newName };
-    setPersons(persons.concat(newObj));
+
+    if (persons.includes(persons.find((person) => person.name === newName))) {
+      window.alert(`${newName} is already added to phonebook`);
+    } else {
+      const newObj = { name: newName, phone: newPhone };
+      setPersons(persons.concat(newObj));
+    }
   };
   return (
     <div>
@@ -23,14 +27,22 @@ const App = () => {
           />
         </div>
         <div>
+          number:<input
+            onChange={(event) => {
+              setPhone(event.target.value);
+            }}
+          />
+        </div>
+        <div>
           <button type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
       <ul>
-        {persons.map((person) => <li>{person.name}</li>)}
+        {persons.map((person) =>
+          <li key={person.name}>{person.name} {person.phone}</li>
+        )}
       </ul>
-      ...
     </div>
   );
 };
