@@ -7,6 +7,7 @@ const getRandomInt = (max) => {
 const Button = ({ onClick, text }) => (
   <button onClick={onClick}>{text}</button>
 );
+
 const Anecdote = ({ text, vote }) => {
   return (
     <div>
