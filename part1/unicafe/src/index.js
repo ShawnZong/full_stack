@@ -3,18 +3,48 @@ import ReactDOM from "react-dom";
 const Button = ({ onClick, text }) => (
   <button onClick={onClick}>{text}</button>
 );
-const App = () => {
-  // save clicks of each button to its own state
-  const [good, setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0);
-  const [bad, setBad] = useState(0);
+const Static = ({ text, value }) => (
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
+);
+const Statistics = ({ good, neutral, bad }) => {
   let all = good + neutral + bad;
   let average = 0;
   let positive = 0;
   if (all !== 0) {
     average = (good - bad) / all;
-    positive = (good) / all;
+    positive = (good) / all * 100 + " %";
+    return (
+      <div>
+        <h1>statistics</h1>
+        <table>
+          <tbody>
+            <Static text="good" value={good} />
+            <Static text="neutral" value={neutral} />
+            <Static text="bad" value={bad} />
+            <Static text="all" value={all} />
+            <Static text="average" value={average} />
+            <Static text="positive" value={positive} />
+          </tbody>
+        </table>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <p>No feedback given</p>
+      </div>
+    );
   }
+};
+const App = () => {
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
   return (
     <div>
       <h1>give feedback</h1>
@@ -36,13 +66,7 @@ const App = () => {
         }}
         text="bad"
       />
-      <h1>statistics</h1>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {all}</p>
-      <p>average {average}</p>
-      <p>potitive {positive} %</p>
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   );
 };
