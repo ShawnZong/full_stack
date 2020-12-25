@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import personServices from "../services/persons.js";
 const Filter = ({ setSearchName }) => {
   const handleSearch = (event) => {
     setSearchName(event.target.value);
@@ -23,7 +24,17 @@ const PersonForm = (
       window.alert(`${newName} is already added to phonebook`);
     } else {
       const newObj = { name: newName, phone: newPhone };
-      setPersons(persons.concat(newObj));
+      // const tmpObj = personServices.create(newObj);
+      // console.log(tmpObj);
+      // setPersons(persons.concat(tmpObj));
+      // setPersons(persons.concat(newObj));
+      personServices
+        .create(newObj)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          setNewName("");
+          setPhone("");
+        });
     }
   };
   return (
