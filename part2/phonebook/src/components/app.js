@@ -19,16 +19,34 @@ const PersonForm = (
 ) => {
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    if (persons.includes(persons.find((person) => person.name === newName))) {
-      window.alert(`${newName} is already added to phonebook`);
+    const matchedPerson = persons.find((person) => person.name === newName);
+    if (persons.includes(matchedPerson)) {
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`,
+        )
+      ) {
+        const newObj = { name: newName, phone: newPhone };
+        personServices
+          .update(matchedPerson.id, newObj)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((person) =>
+                person.id !== returnedPerson.id ? person : returnedPerson
+              ),
+            );
+          })
+          .catch((error) => console.log(error));
+      }
+      // window.alert(`${newName} is already added to phonebook`);
     } else {
       const newObj = { name: newName, phone: newPhone };
       personServices
         .create(newObj)
         .then((returnedPerson) => {
           setPersons(persons.concat(returnedPerson));
-        });
+        })
+        .catch((error) => console.log(error));
     }
   };
   return (
