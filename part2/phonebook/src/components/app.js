@@ -24,16 +24,10 @@ const PersonForm = (
       window.alert(`${newName} is already added to phonebook`);
     } else {
       const newObj = { name: newName, phone: newPhone };
-      // const tmpObj = personServices.create(newObj);
-      // console.log(tmpObj);
-      // setPersons(persons.concat(tmpObj));
-      // setPersons(persons.concat(newObj));
       personServices
         .create(newObj)
         .then((returnedPerson) => {
           setPersons(persons.concat(returnedPerson));
-          setNewName("");
-          setPhone("");
         });
     }
   };
@@ -59,7 +53,18 @@ const PersonForm = (
     </form>
   );
 };
-const Persons = ({ searchName, persons }) => {
+const DeletePerson = ({ person, persons, setPersons }) => {
+  const handleDelete = () => {
+    if (window.confirm(`Delete ${person.name} ?`)) {
+      personServices.deletePerson(person.id);
+      setPersons(persons.filter((tmp) => tmp.id !== person.id));
+    }
+  };
+  return (
+    <button onClick={handleDelete}>delete</button>
+  );
+};
+const ShowPersons = ({ searchName, persons, setPersons }) => {
   const newPersons = persons.filter((person) => {
     if (person.name.toLocaleLowerCase().includes(searchName)) {
       return true;
@@ -69,9 +74,21 @@ const Persons = ({ searchName, persons }) => {
 
   return (<div>
     <ul>
-      {newPersons.map((person) =>
-        <li key={person.name}>{person.name} {person.phone}</li>
-      )}
+      {newPersons.map((person) => {
+        return (
+          <li key={person.name}>
+            {person.name}
+            {" "}
+            {person.phone}
+            {" "}
+            <DeletePerson
+              person={person}
+              persons={persons}
+              setPersons={setPersons}
+            />
+          </li>
+        );
+      })}
     </ul>
   </div>);
 };
@@ -103,7 +120,11 @@ const App = () => {
         setPhone={setPhone}
       />
       <h2>Numbers</h2>
-      <Persons searchName={searchName} persons={persons} />
+      <ShowPersons
+        searchName={searchName}
+        persons={persons}
+        setPersons={setPersons}
+      />
     </div>
   );
 };
