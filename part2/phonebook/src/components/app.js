@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import personServices from "../services/persons.js";
+import Notification from "./Notification.js";
 const Filter = ({ setSearchName }) => {
   const handleSearch = (event) => {
     setSearchName(event.target.value);
@@ -15,7 +16,15 @@ const Filter = ({ setSearchName }) => {
   );
 };
 const PersonForm = (
-  { persons, setPersons, newName, setNewName, newPhone, setPhone },
+  {
+    persons,
+    setPersons,
+    newName,
+    setNewName,
+    newPhone,
+    setPhone,
+    setNotification,
+  },
 ) => {
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -35,6 +44,12 @@ const PersonForm = (
                 person.id !== returnedPerson.id ? person : returnedPerson
               ),
             );
+            setNotification(`Updated ${returnedPerson.name}`);
+            setTimeout(() => {
+              setNotification(null);
+            }, 5000);
+
+            // Notification(`Updated ${returnedPerson.name}`);
           })
           .catch((error) => console.log(error));
       }
@@ -45,6 +60,10 @@ const PersonForm = (
         .create(newObj)
         .then((returnedPerson) => {
           setPersons(persons.concat(returnedPerson));
+          setNotification(`Added ${returnedPerson.name}`);
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
         })
         .catch((error) => console.log(error));
     }
@@ -71,18 +90,22 @@ const PersonForm = (
     </form>
   );
 };
-const DeletePerson = ({ person, persons, setPersons }) => {
+const DeletePerson = ({ person, persons, setPersons, setNotification }) => {
   const handleDelete = () => {
     if (window.confirm(`Delete ${person.name} ?`)) {
       personServices.deletePerson(person.id);
       setPersons(persons.filter((tmp) => tmp.id !== person.id));
+      setNotification(`Deleted ${person.name}`);
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
     }
   };
   return (
     <button onClick={handleDelete}>delete</button>
   );
 };
-const ShowPersons = ({ searchName, persons, setPersons }) => {
+const ShowPersons = ({ searchName, persons, setPersons, setNotification }) => {
   const newPersons = persons.filter((person) => {
     if (person.name.toLocaleLowerCase().includes(searchName)) {
       return true;
@@ -103,6 +126,7 @@ const ShowPersons = ({ searchName, persons, setPersons }) => {
               person={person}
               persons={persons}
               setPersons={setPersons}
+              setNotification={setNotification}
             />
           </li>
         );
@@ -117,6 +141,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newPhone, setPhone] = useState("");
   const [searchName, setSearchName] = useState("");
+  const [notification, setNotification] = useState(null);
   useEffect(() => {
     axios
       .get("http://localhost:3001/persons")
@@ -127,6 +152,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} />
       <Filter setSearchName={setSearchName} />
       <h2>add a new</h2>
       <PersonForm
@@ -136,12 +162,14 @@ const App = () => {
         newPhone={newPhone}
         setNewName={setNewName}
         setPhone={setPhone}
+        setNotification={setNotification}
       />
       <h2>Numbers</h2>
       <ShowPersons
         searchName={searchName}
         persons={persons}
         setPersons={setPersons}
+        setNotification={setNotification}
       />
     </div>
   );
