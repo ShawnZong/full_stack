@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import personServices from "../services/persons.js";
-import Notification from "./Notification.js";
+import { Notification } from "./Notification.js";
 const Filter = ({ setSearchName }) => {
   const handleSearch = (event) => {
     setSearchName(event.target.value);
@@ -44,14 +44,30 @@ const PersonForm = (
                 person.id !== returnedPerson.id ? person : returnedPerson
               ),
             );
-            setNotification(`Updated ${returnedPerson.name}`);
+            setNotification(
+              { message: `Updated ${returnedPerson.name}`, type: "green" },
+            );
             setTimeout(() => {
               setNotification(null);
             }, 5000);
 
             // Notification(`Updated ${returnedPerson.name}`);
           })
-          .catch((error) => console.log(error));
+          .catch((error) => {
+            setNotification(
+              {
+                message:
+                  `Information of ${matchedPerson.name} has already been removed from server`,
+                type: "red",
+              },
+            );
+            setTimeout(() => {
+              setNotification(null);
+            }, 5000);
+            setPersons(
+              persons.filter((person) => person.id !== matchedPerson.id),
+            );
+          });
       }
       // window.alert(`${newName} is already added to phonebook`);
     } else {
@@ -60,7 +76,9 @@ const PersonForm = (
         .create(newObj)
         .then((returnedPerson) => {
           setPersons(persons.concat(returnedPerson));
-          setNotification(`Added ${returnedPerson.name}`);
+          setNotification(
+            { message: `Added ${returnedPerson.name}`, type: "green" },
+          );
           setTimeout(() => {
             setNotification(null);
           }, 5000);
@@ -95,7 +113,12 @@ const DeletePerson = ({ person, persons, setPersons, setNotification }) => {
     if (window.confirm(`Delete ${person.name} ?`)) {
       personServices.deletePerson(person.id);
       setPersons(persons.filter((tmp) => tmp.id !== person.id));
-      setNotification(`Deleted ${person.name}`);
+      setNotification(
+        {
+          message: `Deleted ${person.name}`,
+          type: "red",
+        },
+      );
       setTimeout(() => {
         setNotification(null);
       }, 5000);
@@ -152,7 +175,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notification} />
+      <Notification notification={notification} />
       <Filter setSearchName={setSearchName} />
       <h2>add a new</h2>
       <PersonForm
