@@ -82,7 +82,14 @@ const PersonForm = (
             setNotification(null);
           }, 5000);
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          setNotification(
+            { message: error.response.data.error, type: "red" },
+          );
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
+        });
     }
   };
   return (
