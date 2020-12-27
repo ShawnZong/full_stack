@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import personServices from "../services/persons.js";
 import { Notification } from "./Notification.js";
 const Filter = ({ setSearchName }) => {
@@ -21,8 +20,8 @@ const PersonForm = (
     setPersons,
     newName,
     setNewName,
-    newPhone,
-    setPhone,
+    newNumber,
+    setNumber,
     setNotification,
   },
 ) => {
@@ -35,7 +34,7 @@ const PersonForm = (
           `${newName} is already added to phonebook, replace the old number with a new one?`,
         )
       ) {
-        const newObj = { name: newName, phone: newPhone };
+        const newObj = { name: newName, number: newNumber };
         personServices
           .update(matchedPerson.id, newObj)
           .then((returnedPerson) => {
@@ -71,7 +70,7 @@ const PersonForm = (
       }
       // window.alert(`${newName} is already added to phonebook`);
     } else {
-      const newObj = { name: newName, phone: newPhone };
+      const newObj = { name: newName, number: newNumber };
       personServices
         .create(newObj)
         .then((returnedPerson) => {
@@ -98,7 +97,7 @@ const PersonForm = (
       <div>
         number:<input
           onChange={(event) => {
-            setPhone(event.target.value);
+            setNumber(event.target.value);
           }}
         />
       </div>
@@ -143,7 +142,7 @@ const ShowPersons = ({ searchName, persons, setPersons, setNotification }) => {
           <li key={person.name}>
             {person.name}
             {" "}
-            {person.phone}
+            {person.number}
             {" "}
             <DeletePerson
               person={person}
@@ -162,14 +161,14 @@ const App = () => {
     [],
   );
   const [newName, setNewName] = useState("");
-  const [newPhone, setPhone] = useState("");
+  const [newNumber, setNumber] = useState("");
   const [searchName, setSearchName] = useState("");
   const [notification, setNotification] = useState(null);
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then((response) => {
-        setPersons(response.data);
+    personServices
+      .getAll()
+      .then((returnedPersons) => {
+        setPersons(returnedPersons);
       });
   }, []);
   return (
@@ -182,9 +181,9 @@ const App = () => {
         persons={persons}
         setPersons={setPersons}
         newName={newName}
-        newPhone={newPhone}
+        newNumber={newNumber}
         setNewName={setNewName}
-        setPhone={setPhone}
+        setNumber={setNumber}
         setNotification={setNotification}
       />
       <h2>Numbers</h2>
