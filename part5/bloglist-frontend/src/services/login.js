@@ -8,5 +8,8 @@ const login = async (credentials) => {
 const setToken = (tmp) => {
   token = `bearer ${tmp}`;
 };
+const getToken = () => {
+  return token;
+};
 
-export default { login, setToken };
+export default { login, setToken, getToken };
