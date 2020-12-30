@@ -6,10 +6,11 @@ const Blog = ({ blog }) => (
     {blog.title} {blog.author}
   </div>
 );
-const NewBlogForm = ({ blogs, setBlogs }) => {
+const NewBlogForm = ({ blogs, setBlogs, setNotification }) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
+
   const handleCreate = async (event) => {
     event.preventDefault();
     try {
@@ -19,6 +20,10 @@ const NewBlogForm = ({ blogs, setBlogs }) => {
         url: url
       });
       setBlogs(blogs.concat(savedBlog));
+      setNotification({ type: 'green', message: `a new blog ${title} added` });
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
     } catch (error) {
       console.log(error);
     }

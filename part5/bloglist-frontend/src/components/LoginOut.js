@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import loginService from '../services/login';
+import { Notification } from '../components/Notification';
 
 const LoginForm = ({ setUser }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [notification, setNotification] = useState(null);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -16,6 +18,16 @@ const LoginForm = ({ setUser }) => {
       loginService.setToken(returnedUser.token);
       setUser(returnedUser);
     } catch (exception) {
+      setNotification({
+        message: 'wrong username or password',
+        type: 'red'
+      });
+      // debugger;
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+      console.log('notification');
+      // debugger;
       console.log(exception);
     }
   };
@@ -23,7 +35,7 @@ const LoginForm = ({ setUser }) => {
   return (
     <div>
       <h2>Log in to application</h2>
-
+      <Notification notification={notification} />
       <form onSubmit={handleLogin}>
         <div>
           username
