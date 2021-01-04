@@ -1,25 +1,33 @@
-import React, { useState } from 'react';
-import blogService from '../services/blogs';
-import Togglable from './Togglable';
+import React, { useState } from 'react'
+import blogService from '../services/blogs'
+import Togglable from './Togglable'
 
-const Blog = ({ blog }) => {
-  const [blogLikes, setBlogLikes] = useState(blog.likes);
+const Blog = ({ index, blogs, setBlogs, blog, user }) => {
+  const [blogLikes, setBlogLikes] = useState(blog.likes)
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5
-  };
+  }
   const handleLikes = async () => {
     await blogService.update(blog.id, {
       likes: blogLikes + 1,
       author: blog.author,
       title: blog.title,
       url: blog.url
-    });
-    setBlogLikes(blogLikes + 1);
-  };
+    })
+    setBlogLikes(blogLikes + 1)
+  }
+  const handleRemove = async () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      await blogService.deleteBlog(blog.id)
+      const blogsTmp = [...blogs]
+      blogsTmp.splice(index, 1)
+      setBlogs(blogsTmp)
+    }
+  }
   return (
     <div style={blogStyle}>
       {blog.title} {blog.author}
@@ -29,23 +37,30 @@ const Blog = ({ blog }) => {
           likes {blogLikes} <button onClick={handleLikes}>like</button>
         </p>
         <p>{blog.user.name}</p>
+        {blog.user.id === user.id ? (
+          <button onClick={handleRemove}>remove</button>
+        ) : blog.user === user.id ? (
+          <button onClick={handleRemove}>remove</button>
+        ) : (
+          ''
+        )}
       </Togglable>
     </div>
-  );
-};
-const NewBlogForm = ({ blogs, setBlogs, setNotification, addBlog }) => {
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
+  )
+}
+const NewBlogForm = ({ addBlog }) => {
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   const handleCreate = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     addBlog({
       title: title,
       author: author,
       url: url
-    });
-  };
+    })
+  }
 
   return (
     <div>
@@ -78,6 +93,6 @@ const NewBlogForm = ({ blogs, setBlogs, setNotification, addBlog }) => {
       </div>
       <button onClick={handleCreate}>create</button>
     </div>
-  );
-};
-export { Blog, NewBlogForm };
+  )
+}
+export { Blog, NewBlogForm }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const notificationGreenStyle = {
   color: 'green',
@@ -8,7 +8,7 @@ const notificationGreenStyle = {
   borderRadius: 5,
   padding: 10,
   marginBottom: 10
-};
+}
 const notificationRedStyle = {
   color: 'red',
   background: 'lightgrey',
@@ -17,16 +17,16 @@ const notificationRedStyle = {
   borderRadius: 5,
   padding: 10,
   marginBottom: 10
-};
+}
 const Notification = ({ notification }) => {
   if (notification === null) {
-    return null;
+    return null
   }
-  let tmpStyle = notificationRedStyle;
+  let tmpStyle = notificationRedStyle
   if (notification.type === 'green') {
-    tmpStyle = notificationGreenStyle;
+    tmpStyle = notificationGreenStyle
   }
-  return <div style={tmpStyle}>{notification.message}</div>;
-};
+  return <div style={tmpStyle}>{notification.message}</div>
+}
 
-export { Notification };
+export { Notification }
