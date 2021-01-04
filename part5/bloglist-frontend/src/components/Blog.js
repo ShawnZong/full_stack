@@ -2,6 +2,13 @@ import React, { useState } from 'react'
 import blogService from '../services/blogs'
 import Togglable from './Togglable'
 
+const LikesButton = ({ likes, handleLikes }) => {
+  return (
+    <div>
+      likes {likes} <button onClick={handleLikes}>like</button>
+    </div>
+  )
+}
 const Blog = ({ index, blogs, setBlogs, blog, user }) => {
   const [blogLikes, setBlogLikes] = useState(blog.likes)
   const blogStyle = {
@@ -9,14 +16,14 @@ const Blog = ({ index, blogs, setBlogs, blog, user }) => {
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
-    marginBottom: 5
+    marginBottom: 5,
   }
   const handleLikes = async () => {
     await blogService.update(blog.id, {
       likes: blogLikes + 1,
       author: blog.author,
       title: blog.title,
-      url: blog.url
+      url: blog.url,
     })
     setBlogLikes(blogLikes + 1)
   }
@@ -33,9 +40,7 @@ const Blog = ({ index, blogs, setBlogs, blog, user }) => {
       {blog.title} {blog.author}
       <Togglable showLabel="view" hideLabel="hide">
         <p>{blog.url}</p>
-        <p>
-          likes {blogLikes} <button onClick={handleLikes}>like</button>
-        </p>
+        <LikesButton likes={blogLikes} handleLikes={handleLikes} />
         <p>{blog.user.name}</p>
         {blog.user.id === user.id ? (
           <button onClick={handleRemove}>remove</button>
@@ -58,41 +63,46 @@ const NewBlogForm = ({ addBlog }) => {
     addBlog({
       title: title,
       author: author,
-      url: url
+      url: url,
     })
   }
 
   return (
     <div>
-      <div>
-        title:
-        <input
-          type="text"
-          value={title}
-          name="Title"
-          onChange={({ target }) => setTitle(target.value)}
-        />
-      </div>
-      <div>
-        author:
-        <input
-          type="text"
-          value={author}
-          name="Author"
-          onChange={({ target }) => setAuthor(target.value)}
-        />
-      </div>
-      <div>
-        url:
-        <input
-          type="text"
-          value={url}
-          name="Url"
-          onChange={({ target }) => setUrl(target.value)}
-        />
-      </div>
-      <button onClick={handleCreate}>create</button>
+      <form onSubmit={handleCreate}>
+        <div>
+          title:
+          <input
+            id="title"
+            type="text"
+            value={title}
+            name="Title"
+            onChange={({ target }) => setTitle(target.value)}
+          />
+        </div>
+        <div>
+          author:
+          <input
+            id="author"
+            type="text"
+            value={author}
+            name="Author"
+            onChange={({ target }) => setAuthor(target.value)}
+          />
+        </div>
+        <div>
+          url:
+          <input
+            id="url"
+            type="text"
+            value={url}
+            name="Url"
+            onChange={({ target }) => setUrl(target.value)}
+          />
+        </div>
+        <button type="submit">create</button>
+      </form>
     </div>
   )
 }
-export { Blog, NewBlogForm }
+export { Blog, NewBlogForm, LikesButton }
