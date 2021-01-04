@@ -21,4 +21,10 @@ const update = async (blogID, newBlog) => {
   const response = await axios.put(`${baseUrl}/${blogID}`, newBlog, config);
   return response.data;
 };
-export default { getAll, create, update };
+const deleteBlog = async (blogID) => {
+  const config = {
+    headers: { Authorization: loginService.getToken() }
+  };
+  await axios.delete(`${baseUrl}/${blogID}`, config);
+};
+export default { getAll, create, update, deleteBlog };
