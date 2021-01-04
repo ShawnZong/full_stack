@@ -3,6 +3,7 @@ import blogService from '../services/blogs';
 import Togglable from './Togglable';
 
 const Blog = ({ blog }) => {
+  const [blogLikes, setBlogLikes] = useState(blog.likes);
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -10,13 +11,22 @@ const Blog = ({ blog }) => {
     borderWidth: 1,
     marginBottom: 5
   };
+  const handleLikes = async () => {
+    await blogService.update(blog.id, {
+      likes: blogLikes + 1,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url
+    });
+    setBlogLikes(blogLikes + 1);
+  };
   return (
     <div style={blogStyle}>
       {blog.title} {blog.author}
       <Togglable showLabel="view" hideLabel="hide">
         <p>{blog.url}</p>
         <p>
-          likes {blog.likes} <button>like</button>
+          likes {blogLikes} <button onClick={handleLikes}>like</button>
         </p>
         <p>{blog.user.name}</p>
       </Togglable>

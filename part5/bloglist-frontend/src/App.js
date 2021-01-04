@@ -33,10 +33,8 @@ const App = () => {
   useEffect(() => {
     (async () => {
       const blogsInDB = await blogService.getAll();
-      console.log(blogsInDB);
       setBlogs(blogsInDB);
     })();
-    // .then((tmp) => setBlogs(tmp));
   }, []);
   useEffect(() => {
     const loggedUser = JSON.parse(window.localStorage.getItem('loggedUser'));
