@@ -31,7 +31,12 @@ const App = () => {
   };
 
   useEffect(() => {
-    blogService.getAll().then((tmp) => setBlogs(tmp));
+    (async () => {
+      const blogsInDB = await blogService.getAll();
+      console.log(blogsInDB);
+      setBlogs(blogsInDB);
+    })();
+    // .then((tmp) => setBlogs(tmp));
   }, []);
   useEffect(() => {
     const loggedUser = JSON.parse(window.localStorage.getItem('loggedUser'));
@@ -56,10 +61,14 @@ const App = () => {
       <h2>blogs</h2>
       <Notification notification={notification} />
       <div>
-        <LogOutButton username={user.username} setUser={setUser} />
+        <LogOutButton username={user.name} setUser={setUser} />
       </div>
       <div>
-        <Togglable buttonLabel="new note" ref={blogFromRef}>
+        <Togglable
+          showLabel="create new blog"
+          hideLabel="cancel"
+          ref={blogFromRef}
+        >
           <NewBlogForm
             blogs={blogs}
             setBlogs={setBlogs}
