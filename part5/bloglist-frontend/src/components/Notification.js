@@ -7,7 +7,7 @@ const notificationGreenStyle = {
   borderStyle: 'solid',
   borderRadius: 5,
   padding: 10,
-  marginBottom: 10
+  marginBottom: 10,
 }
 const notificationRedStyle = {
   color: 'red',
@@ -16,7 +16,7 @@ const notificationRedStyle = {
   borderStyle: 'solid',
   borderRadius: 5,
   padding: 10,
-  marginBottom: 10
+  marginBottom: 10,
 }
 const Notification = ({ notification }) => {
   if (notification === null) {
@@ -26,7 +26,11 @@ const Notification = ({ notification }) => {
   if (notification.type === 'green') {
     tmpStyle = notificationGreenStyle
   }
-  return <div style={tmpStyle}>{notification.message}</div>
+  return (
+    <div className="notification" style={tmpStyle}>
+      {notification.message}
+    </div>
+  )
 }
 
 export { Notification }

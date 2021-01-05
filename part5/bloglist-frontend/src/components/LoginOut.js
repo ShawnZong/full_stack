@@ -13,7 +13,7 @@ const LoginForm = ({ setUser }) => {
     try {
       const returnedUser = await loginService.login({
         username: username,
-        password: password
+        password: password,
       })
       window.localStorage.setItem('loggedUser', JSON.stringify(returnedUser))
       loginService.setToken(returnedUser.token)
@@ -21,7 +21,7 @@ const LoginForm = ({ setUser }) => {
     } catch (exception) {
       setNotification({
         message: 'wrong username or password',
-        type: 'red'
+        type: 'red',
       })
       // debugger;
       setTimeout(() => {
@@ -41,6 +41,7 @@ const LoginForm = ({ setUser }) => {
         <div>
           username
           <input
+            id="loginUsername"
             type="text"
             value={username}
             name="Username"
@@ -50,13 +51,16 @@ const LoginForm = ({ setUser }) => {
         <div>
           password
           <input
+            id="loginPwd"
             type="text"
             value={password}
             name="Password"
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button type="submit">login</button>
+        <button id="loginButton" type="submit">
+          login
+        </button>
       </form>
     </div>
   )
@@ -76,11 +80,11 @@ const LogOutButton = ({ username, setUser }) => {
 }
 
 LoginForm.propTypes = {
-  setUser: PropTypes.func.isRequired
+  setUser: PropTypes.func.isRequired,
 }
 
 LogOutButton.propTypes = {
   username: PropTypes.string.isRequired,
-  setUser: PropTypes.func.isRequired
+  setUser: PropTypes.func.isRequired,
 }
 export { LoginForm, LogOutButton }
