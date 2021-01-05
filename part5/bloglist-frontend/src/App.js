@@ -10,7 +10,7 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
   const [notification, setNotification] = useState(null)
-  const blogFromRef = useRef()
+  const blogFormRef = useRef()
 
   const addBlog = async (newBlog) => {
     // event.preventDefault();
@@ -19,7 +19,7 @@ const App = () => {
       setBlogs(blogs.concat(savedBlog))
       setNotification({
         type: 'green',
-        message: `a new blog ${newBlog.title} added`
+        message: `a new blog ${newBlog.title} added`,
       })
       setTimeout(() => {
         setNotification(null)
@@ -27,7 +27,7 @@ const App = () => {
     } catch (error) {
       console.log(error)
     }
-    blogFromRef.current.toggleVisibility()
+    // blogFormRef.current.toggleVisibility()
   }
 
   useEffect(() => {
@@ -66,7 +66,7 @@ const App = () => {
         <Togglable
           showLabel="create new blog"
           hideLabel="cancel"
-          ref={blogFromRef}
+          ref={blogFormRef}
         >
           <NewBlogForm
             blogs={blogs}

@@ -5,7 +5,10 @@ import Togglable from './Togglable'
 const LikesButton = ({ likes, handleLikes }) => {
   return (
     <div>
-      likes {likes} <button onClick={handleLikes}>like</button>
+      likes {likes}{' '}
+      <button id="likesButton" onClick={handleLikes}>
+        like
+      </button>
     </div>
   )
 }
@@ -36,7 +39,7 @@ const Blog = ({ index, blogs, setBlogs, blog, user }) => {
     }
   }
   return (
-    <div style={blogStyle}>
+    <div className='blogDetail' style={blogStyle}>
       {blog.title} {blog.author}
       <Togglable showLabel="view" hideLabel="hide">
         <p>{blog.url}</p>
