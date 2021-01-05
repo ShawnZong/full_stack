@@ -22,13 +22,14 @@ describe('Blog app', function () {
 
   describe('Login', function () {
     it('succeeds with correct credentials', function () {
-      cy.get('#loginUsername').type(firstUser.username)
-      cy.get('#loginPwd').type(firstUser.password)
-      cy.get('#loginButton').click()
+      //   cy.get('#loginUsername').type(firstUser.username)
+      //   cy.get('#loginPwd').type(firstUser.password)
+      //   cy.get('#loginButton').click()
+      cy.login({ username: firstUser.username, password: firstUser.password })
       cy.contains(`${firstUser.name} logged in`)
     })
 
-    it.only('fails with wrong credentials', function () {
+    it('fails with wrong credentials', function () {
       cy.get('#loginUsername').type(firstUser.username)
       cy.get('#loginPwd').type('wrongPwd')
       cy.get('#loginButton').click()
@@ -38,6 +39,23 @@ describe('Blog app', function () {
         .and('have.css', 'color', 'rgb(255, 0, 0)')
 
       cy.get('html').should('not.contain', `${firstUser.name} logged in`)
+    })
+  })
+
+  describe.only('When logged in', function () {
+    beforeEach(function () {
+      cy.login({ username: firstUser.username, password: firstUser.password })
+    })
+
+    it('A blog can be created', function () {
+      cy.get('#showTogglable').click()
+      cy.get('#title').type('titleTest')
+      cy.get('#author').type('authorTest')
+      cy.get('#url').type('urlTest')
+      cy.get('#newBlogButton').click()
+
+      cy.contains('titleTest')
+      cy.contains('authorTest')
     })
   })
 })
