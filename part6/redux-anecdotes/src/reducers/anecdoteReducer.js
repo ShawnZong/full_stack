@@ -36,20 +36,24 @@ const initialState = anecdotesAtStart.map(asObject)
 const reducer = (state = initialState, action) => {
   console.log('state now: ', state)
   console.log('action', action)
+  let updatedState=state
   switch(action.type){
   case 'VOTE':{
     const newNote=state.find(tmp => tmp.id===action.id)
     newNote.votes=newNote.votes+1
-    return state.map(tmp => tmp.id===action.id?newNote:tmp)
+    updatedState= state.map(tmp => tmp.id===action.id?newNote:tmp)
+    break
   }
 
   case 'ADD_NOTE':{
-    return state.concat(asObject(action.content))
+    updatedState= state.concat(asObject(action.content))
+    break
   }
 
   default:
-    return state
+    break
   }
+  return updatedState.sort((a,b) => b.votes-a.votes)
 }
 
 export default reducer
