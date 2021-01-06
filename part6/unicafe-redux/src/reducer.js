@@ -6,7 +6,7 @@ const initialState = {
 }
 
 const counterReducer = (state = initialState, action) => {
-  console.log(action)
+  // console.log(action)
   const stateTmp=lodash.cloneDeep(state)
 
   switch (action.type) {
