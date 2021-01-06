@@ -23,7 +23,13 @@ const createVote=(id) => {
     id:id
   }
 }
+const createNote=(content) => {
+  return {
+    type:'ADD_NOTE',
+    content:content,
 
+  }
+}
 
 const initialState = anecdotesAtStart.map(asObject)
 
@@ -31,15 +37,20 @@ const reducer = (state = initialState, action) => {
   console.log('state now: ', state)
   console.log('action', action)
   switch(action.type){
-  case 'VOTE':
+  case 'VOTE':{
     const newNote=state.find(tmp => tmp.id===action.id)
     newNote.votes=newNote.votes+1
-    console.log(newNote)
     return state.map(tmp => tmp.id===action.id?newNote:tmp)
+  }
+
+  case 'ADD_NOTE':{
+    return state.concat(asObject(action.content))
+  }
+
   default:
     return state
   }
 }
 
 export default reducer
-export { createVote }
+export { createVote ,createNote }
