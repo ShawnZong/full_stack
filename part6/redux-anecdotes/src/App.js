@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react'
-import { AnecdoteForm, ConnectedAnecdoteList } from './components/Anecdotes'
-import Filter from './components/Filter'
+import {
+  ConnectedAnecdoteList,
+  ConnectedAnecdoteForm,
+} from './components/Anecdotes'
+import { ConnectedFilter } from './components/Filter'
 import Notification from './components/Notification'
 import { initializeNotes } from './reducers/anecdoteReducer'
 import { useDispatch } from 'react-redux'
@@ -14,10 +17,10 @@ const App = () => {
   return (
     <div>
       <h2>Anecdotes</h2>
-      <Filter />
+      <ConnectedFilter />
       <Notification />
       <ConnectedAnecdoteList />
-      <AnecdoteForm />
+      <ConnectedAnecdoteForm />
     </div>
   )
 }
