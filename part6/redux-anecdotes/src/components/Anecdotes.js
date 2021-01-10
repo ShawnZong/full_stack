@@ -1,42 +1,69 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { createVote,createNote } from '../reducers/anecdoteReducer'
-const VoteButton=({ anecdote,handleClick }) => {
-  return (<div>
-        has {anecdote.votes}
-    <button onClick={handleClick}>vote</button>
-  </div>)
+import { createVote, createNote } from '../reducers/anecdoteReducer'
+import {
+  resetNotification,
+  setNotification,
+} from '../reducers/notificationReducer'
+
+const VoteButton = ({ anecdote, handleClick }) => {
+  return (
+    <div>
+      has {anecdote.votes}
+      <button onClick={handleClick}>vote</button>
+    </div>
+  )
 }
-const AnecdoteList=() => {
-  const anecdotes=useSelector(state => state)
-  const dispatch=useDispatch()
-  return (<div>
-    {anecdotes.map(anecdote =>
-      <div key={anecdote.id}>
-        <div>
-          {anecdote.content}
-        </div>
-        <VoteButton anecdote={anecdote} handleClick={() => dispatch(createVote(anecdote.id))} />
-      </div>
-    )}
-  </div>)
+const AnecdoteList = () => {
+  const anecdotes = useSelector((state) => state.notes)
+  const filter = useSelector((state) => state.filter)
+  const dispatch = useDispatch()
+  return (
+    <div>
+      {anecdotes
+        .filter((anecdote) =>
+          anecdote.content.toLowerCase().includes(filter.toLowerCase()),
+        )
+        .map((anecdote) => (
+          <div key={anecdote.id}>
+            <div>{anecdote.content}</div>
+            <VoteButton
+              anecdote={anecdote}
+              handleClick={() => {
+                dispatch(createVote(anecdote.id))
+                dispatch(setNotification(`you voted '${anecdote.content}'`))
+                setTimeout(() => {
+                  dispatch(resetNotification())
+                }, 5000)
+              }}
+            />
+          </div>
+        ))}
+    </div>
+  )
 }
-const AnecdoteForm=() => {
+const AnecdoteForm = () => {
   const dispatch = useDispatch()
 
-  const addNote=(event) => {
+  const addNote = (event) => {
     event.preventDefault()
-    const content=event.target.note.value
+    const content = event.target.note.value
     dispatch(createNote(content))
+    dispatch(setNotification(`you created '${content}'`))
+    setTimeout(() => {
+      dispatch(resetNotification())
+    }, 5000)
   }
   return (
     <div>
       <h2>create new</h2>
-      <form  onSubmit={addNote}>
-        <div><input name='note' /></div>
-        <button type='submit' >create</button>
+      <form onSubmit={addNote}>
+        <div>
+          <input name="note" />
+        </div>
+        <button type="submit">create</button>
       </form>
     </div>
   )
 }
-export { AnecdoteForm,AnecdoteList  }
+export { AnecdoteForm, AnecdoteList }
