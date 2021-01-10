@@ -1,11 +1,16 @@
 const initialState = null
+let lastTimer = null
+
 const resetNotification = () => {
   return { type: 'RESET' }
 }
 const setNotification = (notification, time) => {
   return async (dispatch) => {
     await dispatch({ type: 'SET_NOTIFICATION', notification: notification })
-    setTimeout(() => {
+    if (lastTimer !== null) {
+      clearTimeout(lastTimer)
+    }
+    lastTimer = setTimeout(() => {
       dispatch(resetNotification())
     }, time * 1000)
   }
