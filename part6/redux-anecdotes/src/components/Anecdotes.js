@@ -5,6 +5,7 @@ import {
   resetNotification,
   setNotification,
 } from '../reducers/notificationReducer'
+import noteService from '../services/anecdotes'
 
 const VoteButton = ({ anecdote, handleClick }) => {
   return (
@@ -17,6 +18,7 @@ const VoteButton = ({ anecdote, handleClick }) => {
 const AnecdoteList = () => {
   const anecdotes = useSelector((state) => state.notes)
   const filter = useSelector((state) => state.filter)
+
   const dispatch = useDispatch()
   return (
     <div>
@@ -45,10 +47,12 @@ const AnecdoteList = () => {
 const AnecdoteForm = () => {
   const dispatch = useDispatch()
 
-  const addNote = (event) => {
+  const addNote = async (event) => {
     event.preventDefault()
     const content = event.target.note.value
-    dispatch(createNote(content))
+    event.target.note.value = ''
+    const response = await noteService.createNew(content)
+    dispatch(createNote(response))
     dispatch(setNotification(`you created '${content}'`))
     setTimeout(() => {
       dispatch(resetNotification())

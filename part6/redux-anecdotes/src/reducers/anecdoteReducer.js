@@ -23,27 +23,33 @@ const createVote = (id) => {
     id: id,
   }
 }
-const createNote = (content) => {
+const createNote = (note) => {
   return {
     type: 'ADD_NOTE',
-    content: content,
+    data: note,
   }
+}
+
+const initializeNotes = (notes) => {
+  return { type: 'INIT_NOTE', notes: notes }
 }
 
 const initialState = anecdotesAtStart.map(asObject)
 
-const anecdoteReducer = (state = initialState, action) => {
+const anecdoteReducer = (state = [], action) => {
   let updatedState = state
   switch (action.type) {
+    case 'INIT_NOTE':
+      updatedState = action.notes
+      break
     case 'VOTE': {
       const newNote = state.find((tmp) => tmp.id === action.id)
       newNote.votes = newNote.votes + 1
       updatedState = state.map((tmp) => (tmp.id === action.id ? newNote : tmp))
       break
     }
-
     case 'ADD_NOTE': {
-      updatedState = state.concat(asObject(action.content))
+      updatedState = state.concat(action.data)
       break
     }
 
@@ -54,4 +60,4 @@ const anecdoteReducer = (state = initialState, action) => {
 }
 
 export default anecdoteReducer
-export { createVote, createNote }
+export { createVote, createNote, initializeNotes }
