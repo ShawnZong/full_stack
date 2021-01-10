@@ -2,8 +2,13 @@ const initialState = null
 const resetNotification = () => {
   return { type: 'RESET' }
 }
-const setNotification = (notification) => {
-  return { type: 'SET_NOTIFICATION', notification: notification }
+const setNotification = (notification, time) => {
+  return async (dispatch) => {
+    await dispatch({ type: 'SET_NOTIFICATION', notification: notification })
+    setTimeout(() => {
+      dispatch(resetNotification())
+    }, time * 1000)
+  }
 }
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {

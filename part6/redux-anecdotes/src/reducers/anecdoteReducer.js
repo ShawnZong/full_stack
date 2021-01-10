@@ -1,4 +1,6 @@
 /* eslint-disable no-case-declarations */
+import noteService from '../services/anecdotes'
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -18,22 +20,28 @@ const asObject = (anecdote) => {
   }
 }
 const createVote = (id) => {
-  return {
-    type: 'VOTE',
-    id: id,
+  return async (dispatch) => {
+    const newObj = await noteService.getOne(id)
+    newObj.votes = newObj.votes + 1
+    await noteService.updateNote(id, newObj)
+    dispatch({ type: 'VOTE', id: id })
   }
 }
-const createNote = (note) => {
-  return {
-    type: 'ADD_NOTE',
-    data: note,
+const createNote = (content) => {
+  return async (dispatch) => {
+    const response = await noteService.createNew(content)
+    dispatch({ type: 'ADD_NOTE', data: response })
   }
 }
 
-const initializeNotes = (notes) => {
-  return { type: 'INIT_NOTE', notes: notes }
+const initializeNotes = () => {
+  return async (dispatch) => {
+    const notes = await noteService.getAll()
+    dispatch({ type: 'INIT_NOTE', notes: notes })
+  }
 }
 
+// eslint-disable-next-line no-unused-vars
 const initialState = anecdotesAtStart.map(asObject)
 
 const anecdoteReducer = (state = [], action) => {

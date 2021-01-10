@@ -1,11 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { createVote, createNote } from '../reducers/anecdoteReducer'
-import {
-  resetNotification,
-  setNotification,
-} from '../reducers/notificationReducer'
-import noteService from '../services/anecdotes'
+import { setNotification } from '../reducers/notificationReducer'
 
 const VoteButton = ({ anecdote, handleClick }) => {
   return (
@@ -33,10 +29,7 @@ const AnecdoteList = () => {
               anecdote={anecdote}
               handleClick={() => {
                 dispatch(createVote(anecdote.id))
-                dispatch(setNotification(`you voted '${anecdote.content}'`))
-                setTimeout(() => {
-                  dispatch(resetNotification())
-                }, 5000)
+                dispatch(setNotification(`you voted '${anecdote.content}'`, 5))
               }}
             />
           </div>
@@ -51,12 +44,8 @@ const AnecdoteForm = () => {
     event.preventDefault()
     const content = event.target.note.value
     event.target.note.value = ''
-    const response = await noteService.createNew(content)
-    dispatch(createNote(response))
-    dispatch(setNotification(`you created '${content}'`))
-    setTimeout(() => {
-      dispatch(resetNotification())
-    }, 5000)
+    dispatch(createNote(content))
+    dispatch(setNotification(`you created '${content}'`, 5))
   }
   return (
     <div>
