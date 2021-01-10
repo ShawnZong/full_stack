@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSelector, useDispatch, connect } from 'react-redux'
+import { useDispatch, connect } from 'react-redux'
 import { createVote, createNote } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
@@ -14,10 +14,6 @@ const VoteButton = ({ anecdote, handleClick }) => {
 
 const AnecdoteList = (props) => {
   const anecdotes = props.notes
-  // const anecdotes = useSelector((state) => state.notes)
-  // const filter = useSelector((state) => state.filter)
-
-  const dispatch = useDispatch()
   return (
     <div>
       {anecdotes.map((anecdote) => (
@@ -26,8 +22,8 @@ const AnecdoteList = (props) => {
           <VoteButton
             anecdote={anecdote}
             handleClick={() => {
-              dispatch(createVote(anecdote.id))
-              dispatch(setNotification(`you voted '${anecdote.content}'`, 5))
+              props.createVote(anecdote.id)
+              props.setNotification(`you voted '${anecdote.content}'`, 5)
             }}
           />
         </div>
@@ -42,7 +38,14 @@ const mapStateToPropsAnecdoteList = (state) => {
     ),
   }
 }
-const ConnectedAnecdoteList = connect(mapStateToPropsAnecdoteList)(AnecdoteList)
+const mapDispatchToPropsAnecdoteList = {
+  createVote,
+  setNotification,
+}
+const ConnectedAnecdoteList = connect(
+  mapStateToPropsAnecdoteList,
+  mapDispatchToPropsAnecdoteList,
+)(AnecdoteList)
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch()
