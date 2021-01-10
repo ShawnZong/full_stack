@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { AnecdoteForm, AnecdoteList } from './components/Anecdotes'
+import { AnecdoteForm, ConnectedAnecdoteList } from './components/Anecdotes'
 import Filter from './components/Filter'
 import Notification from './components/Notification'
 import { initializeNotes } from './reducers/anecdoteReducer'
@@ -16,7 +16,7 @@ const App = () => {
       <h2>Anecdotes</h2>
       <Filter />
       <Notification />
-      <AnecdoteList />
+      <ConnectedAnecdoteList />
       <AnecdoteForm />
     </div>
   )

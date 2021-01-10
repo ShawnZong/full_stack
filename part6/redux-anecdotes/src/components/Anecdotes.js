@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch, connect } from 'react-redux'
 import { createVote, createNote } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
@@ -11,32 +11,39 @@ const VoteButton = ({ anecdote, handleClick }) => {
     </div>
   )
 }
-const AnecdoteList = () => {
-  const anecdotes = useSelector((state) => state.notes)
-  const filter = useSelector((state) => state.filter)
+
+const AnecdoteList = (props) => {
+  const anecdotes = props.notes
+  // const anecdotes = useSelector((state) => state.notes)
+  // const filter = useSelector((state) => state.filter)
 
   const dispatch = useDispatch()
   return (
     <div>
-      {anecdotes
-        .filter((anecdote) =>
-          anecdote.content.toLowerCase().includes(filter.toLowerCase()),
-        )
-        .map((anecdote) => (
-          <div key={anecdote.id}>
-            <div>{anecdote.content}</div>
-            <VoteButton
-              anecdote={anecdote}
-              handleClick={() => {
-                dispatch(createVote(anecdote.id))
-                dispatch(setNotification(`you voted '${anecdote.content}'`, 5))
-              }}
-            />
-          </div>
-        ))}
+      {anecdotes.map((anecdote) => (
+        <div key={anecdote.id}>
+          <div>{anecdote.content}</div>
+          <VoteButton
+            anecdote={anecdote}
+            handleClick={() => {
+              dispatch(createVote(anecdote.id))
+              dispatch(setNotification(`you voted '${anecdote.content}'`, 5))
+            }}
+          />
+        </div>
+      ))}
     </div>
   )
 }
+const mapStateToPropsAnecdoteList = (state) => {
+  return {
+    notes: state.notes.filter((anecdote) =>
+      anecdote.content.toLowerCase().includes(state.filter.toLowerCase()),
+    ),
+  }
+}
+const ConnectedAnecdoteList = connect(mapStateToPropsAnecdoteList)(AnecdoteList)
+
 const AnecdoteForm = () => {
   const dispatch = useDispatch()
 
@@ -59,4 +66,4 @@ const AnecdoteForm = () => {
     </div>
   )
 }
-export { AnecdoteForm, AnecdoteList }
+export { AnecdoteForm, AnecdoteList, ConnectedAnecdoteList }
