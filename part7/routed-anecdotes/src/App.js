@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useRouteMatch,
+} from "react-router-dom";
 const Menu = () => {
   const padding = {
     paddingRight: 5,
@@ -18,17 +24,6 @@ const Menu = () => {
         </Link>
       </div>
     </div>
-    // <div>
-    //   <a href="#" style={padding}>
-    //     anecdotes
-    //   </a>
-    //   <a href="#" style={padding}>
-    //     create new
-    //   </a>
-    //   <a href="#" style={padding}>
-    //     about
-    //   </a>
-    // </div>
   );
 };
 
@@ -37,9 +32,17 @@ const AnecdoteList = ({ anecdotes }) => (
     <h2>Anecdotes</h2>
     <ul>
       {anecdotes.map((anecdote) => (
-        <li key={anecdote.id}>{anecdote.content}</li>
+        <li key={anecdote.id}>
+          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+        </li>
       ))}
     </ul>
+  </div>
+);
+
+const Anecdote = ({ anecdote }) => (
+  <div>
+    <h1>{anecdote.content}</h1>
   </div>
 );
 
@@ -166,23 +169,29 @@ const App = () => {
     setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
   };
 
+  const match = useRouteMatch("/anecdotes/:id");
+  const singleAnecdote = match
+    ? anecdotes.find((tmp) => tmp.id === match.params.id)
+    : null;
   return (
     <div>
       <h1>Software anecdotes</h1>
-      <Router>
-        <Menu />
-        <Switch>
-          <Router path="/create">
-            <CreateNew addNew={addNew} />
-          </Router>
-          <Router path="/about">
-            <About />
-          </Router>
-          <Router path="/">
-            <AnecdoteList anecdotes={anecdotes} />
-          </Router>
-        </Switch>
-      </Router>
+
+      <Menu />
+      <Switch>
+        <Route path="/anecdotes/:id">
+          <Anecdote anecdote={singleAnecdote} />
+        </Route>
+        <Route path="/create">
+          <CreateNew addNew={addNew} />
+        </Route>
+        <Route path="/about">
+          <About />
+        </Route>
+        <Route path="/">
+          <AnecdoteList anecdotes={anecdotes} />
+        </Route>
+      </Switch>
 
       <Footer />
     </div>
@@ -190,3 +199,4 @@ const App = () => {
 };
 
 export default App;
+export { Router };
