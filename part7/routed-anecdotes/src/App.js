@@ -92,9 +92,16 @@ const CreateNew = (props) => {
 
   const history = useHistory();
 
-  const contentInput = useField("text");
-  const authorInput = useField("text");
-  const infoInput = useField("text");
+  const contentField = useField("text");
+  const authorField = useField("text");
+  const infoField = useField("text");
+
+  const contentInput = { ...contentField };
+  delete contentInput.reset;
+  const authorInput = { ...authorField };
+  delete authorInput.reset;
+  const infoInput = { ...infoField };
+  delete infoInput.reset;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -111,6 +118,11 @@ const CreateNew = (props) => {
     history.push("/");
   };
 
+  const handleReset = () => {
+    contentField.reset();
+    authorField.reset();
+    infoField.reset();
+  };
   return (
     <div>
       <h2>create a new anecdote</h2>
@@ -129,6 +141,7 @@ const CreateNew = (props) => {
         </div>
         <button>create</button>
       </form>
+      <button onClick={handleReset}>reset</button>
     </div>
   );
 };
