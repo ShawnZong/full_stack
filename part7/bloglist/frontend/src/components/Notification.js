@@ -25,8 +25,6 @@ const Notification = () => {
     return null
   }
   let tmpStyle = notificationRedStyle
-  // console.log(notification.color)
-  // console.log(notification)
 
   if (notification.color === 'green') {
     tmpStyle = notificationGreenStyle

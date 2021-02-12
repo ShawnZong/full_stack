@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import loginService from '../services/login'
 import { Notification } from '../components/Notification'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
@@ -7,13 +6,13 @@ import {
   setNotification,
   resetNotification,
 } from '../reducers/notificationReducer'
+import { userLogin, userLogout } from '../reducers/userReducer'
 
-const LoginForm = ({ setUser }) => {
+const LoginForm = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  // const [notification, setNotification] = useState(null)
+
   const dispatch = useDispatch()
-  // dispatch(resetNotification())
   useEffect(() => {
     dispatch(resetNotification())
   })
@@ -21,13 +20,14 @@ const LoginForm = ({ setUser }) => {
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      const returnedUser = await loginService.login({
-        username: username,
-        password: password,
-      })
-      window.localStorage.setItem('loggedUser', JSON.stringify(returnedUser))
-      loginService.setToken(returnedUser.token)
-      setUser(returnedUser)
+      dispatch(userLogin({ username: username, password: password }))
+      // const returnedUser = await loginService.login({
+      //   username: username,
+      //   password: password,
+      // })
+      // window.localStorage.setItem('loggedUser', JSON.stringify(returnedUser))
+      // loginService.setToken(returnedUser.token)
+      // setUser(returnedUser)
     } catch (exception) {
       console.log(exception)
       dispatch(setNotification('wrong username or password', 'red', 5))
@@ -67,7 +67,7 @@ const LoginForm = ({ setUser }) => {
   )
 }
 
-const LogOutButton = ({ username, setUser }) => {
+const LogOutButton = ({ username }) => {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(resetNotification())
@@ -75,8 +75,7 @@ const LogOutButton = ({ username, setUser }) => {
 
   const handleLogout = (event) => {
     event.preventDefault()
-    window.localStorage.removeItem('loggedUser')
-    setUser(null)
+    dispatch(userLogout())
   }
   return (
     <div>
@@ -85,12 +84,7 @@ const LogOutButton = ({ username, setUser }) => {
   )
 }
 
-LoginForm.propTypes = {
-  setUser: PropTypes.func.isRequired,
-}
-
 LogOutButton.propTypes = {
   username: PropTypes.string.isRequired,
-  setUser: PropTypes.func.isRequired,
 }
 export { LoginForm, LogOutButton }

@@ -26,3 +26,6 @@ yarn-error.log*
 
 #cypress
 /cypress/videos
+
+#folder
+.DS_Store

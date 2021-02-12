@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 import Togglable from './Togglable'
+import { useDispatch } from 'react-redux'
+import { removeBlog } from '../reducers/blogsReducer'
 
 const LikesButton = ({ likes, handleLikes }) => {
   return (
@@ -12,7 +14,8 @@ const LikesButton = ({ likes, handleLikes }) => {
     </div>
   )
 }
-const Blog = ({ index, blogs, setBlogs, blog, user }) => {
+const Blog = ({ index, blog, user }) => {
+  const dispatch = useDispatch()
   const [blogLikes, setBlogLikes] = useState(blog.likes)
   const blogStyle = {
     paddingTop: 10,
@@ -31,15 +34,10 @@ const Blog = ({ index, blogs, setBlogs, blog, user }) => {
     setBlogLikes(blogLikes + 1)
   }
   const handleRemove = async () => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-      await blogService.deleteBlog(blog.id)
-      const blogsTmp = [...blogs]
-      blogsTmp.splice(index, 1)
-      setBlogs(blogsTmp)
-    }
+    dispatch(removeBlog(blog, index))
   }
   return (
-    <div className='blogDetail' style={blogStyle}>
+    <div className="blogDetail" style={blogStyle}>
       {blog.title} {blog.author}
       <Togglable showLabel="view" hideLabel="hide">
         <p>{blog.url}</p>
