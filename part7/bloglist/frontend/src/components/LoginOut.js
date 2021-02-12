@@ -15,7 +15,7 @@ const LoginForm = () => {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(resetNotification())
-  })
+  }, [])
 
   const handleLogin = async (event) => {
     event.preventDefault()

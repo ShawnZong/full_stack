@@ -6,12 +6,12 @@ const initUserList = () => {
     dispatch({ type: 'INIT', users: usersInDB })
   }
 }
-const userListReducer = (state = [], action) => {
+const userListReducer = (state = null, action) => {
   switch (action.type) {
     case 'INIT':
       return action.users
     case 'RESET':
-      return []
+      return null
     default:
       return state
   }

@@ -1,15 +1,25 @@
 import React, { useEffect } from 'react'
+
+// redux
 import { useDispatch, useSelector } from 'react-redux'
 import { initUserList } from '../reducers/userListReducer'
-import { Table } from 'react-bootstrap'
+
+// react router
+import { Link } from 'react-router-dom'
+
+// style
+import { Table, ListGroup } from 'react-bootstrap'
 
 const UserList = () => {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(initUserList())
-  })
+  }, [])
 
   const userList = useSelector((state) => state.userList)
+  if (!userList) {
+    return null
+  }
 
   return (
     <div>
@@ -24,7 +34,9 @@ const UserList = () => {
         <tbody>
           {userList.map((user) => (
             <tr key={user.id}>
-              <td>{user.username}</td>
+              <td>
+                <Link to={`/users/${user.id}`}> {user.username}</Link>
+              </td>
               <td>{user.blogs.length}</td>
             </tr>
           ))}
@@ -34,4 +46,20 @@ const UserList = () => {
   )
 }
 
-export { UserList }
+const IndiUserView = (user) => {
+  if (!user) {
+    return null
+  }
+  return (
+    <div>
+      <h1>{user.usernmae}</h1>
+      <h2>added blogs</h2>
+      <ListGroup>
+        {user.blogs.map((blog) => (
+          <ListGroup.Item key={blog.id}>{blog.title}</ListGroup.Item>
+        ))}
+      </ListGroup>
+    </div>
+  )
+}
+export { UserList, IndiUserView }
