@@ -1,4 +1,5 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 
 const notificationGreenStyle = {
   color: 'green',
@@ -18,12 +19,16 @@ const notificationRedStyle = {
   padding: 10,
   marginBottom: 10,
 }
-const Notification = ({ notification }) => {
+const Notification = () => {
+  const notification = useSelector((state) => state.notification)
   if (notification === null) {
     return null
   }
   let tmpStyle = notificationRedStyle
-  if (notification.type === 'green') {
+  // console.log(notification.color)
+  // console.log(notification)
+
+  if (notification.color === 'green') {
     tmpStyle = notificationGreenStyle
   }
   return (

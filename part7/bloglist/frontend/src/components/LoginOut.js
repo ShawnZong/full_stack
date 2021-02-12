@@ -1,12 +1,22 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import loginService from '../services/login'
 import { Notification } from '../components/Notification'
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import {
+  setNotification,
+  resetNotification,
+} from '../reducers/notificationReducer'
 
 const LoginForm = ({ setUser }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [notification, setNotification] = useState(null)
+  // const [notification, setNotification] = useState(null)
+  const dispatch = useDispatch()
+  // dispatch(resetNotification())
+  useEffect(() => {
+    dispatch(resetNotification())
+  })
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -19,24 +29,15 @@ const LoginForm = ({ setUser }) => {
       loginService.setToken(returnedUser.token)
       setUser(returnedUser)
     } catch (exception) {
-      setNotification({
-        message: 'wrong username or password',
-        type: 'red',
-      })
-      // debugger;
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
-      console.log('notification')
-      // debugger;
       console.log(exception)
+      dispatch(setNotification('wrong username or password', 'red', 5))
     }
   }
 
   return (
     <div>
       <h2>Log in to application</h2>
-      <Notification notification={notification} />
+      <Notification />
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -67,6 +68,11 @@ const LoginForm = ({ setUser }) => {
 }
 
 const LogOutButton = ({ username, setUser }) => {
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(resetNotification())
+  }, [])
+
   const handleLogout = (event) => {
     event.preventDefault()
     window.localStorage.removeItem('loggedUser')

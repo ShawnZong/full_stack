@@ -4,14 +4,14 @@ const resetNotification = () => {
   return { type: 'RESET' }
 }
 
-const setNotification = (notification, time) => {
+const setNotification = (message, color, time) => {
   return async (dispatch) => {
-    await dispatch({ type: 'SET_NOTIFICATION', notification: notification })
+    await dispatch({ type: 'SET_NOTIFICATION', message: message, color: color })
     if (lastTimer !== null) {
       clearTimeout(lastTimer)
     }
     lastTimer = setTimeout(() => {
-      dispatch(resetNotification)
+      dispatch(resetNotification())
     }, time * 1000)
   }
 }
@@ -21,7 +21,7 @@ const notificationReducer = (state = null, action) => {
     case 'RESET':
       return null
     case 'SET_NOTIFICATION':
-      return action.notification
+      return { message: action.message, color: action.color }
     default:
       return state
   }

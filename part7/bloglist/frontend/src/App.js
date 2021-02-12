@@ -5,11 +5,15 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import { Notification } from './components/Notification'
 import Togglable from './components/Togglable'
+import { useDispatch } from 'react-redux'
+import { setNotification } from './reducers/notificationReducer'
 
 const App = () => {
+  const dispatch = useDispatch()
+
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
-  const [notification, setNotification] = useState(null)
+  // const [notification, setNotification] = useState(null)
   const blogFormRef = useRef()
 
   const addBlog = async (newBlog) => {
@@ -17,27 +21,26 @@ const App = () => {
     try {
       const savedBlog = await blogService.create(newBlog)
       setBlogs(blogs.concat(savedBlog))
-      setNotification({
-        type: 'green',
-        message: `a new blog ${newBlog.title} added`,
-      })
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+      dispatch(setNotification(`a new blog ${newBlog.title} added`, 'green', 5))
+      // setNotification({
+      //   type: 'green',
+      //   message: `a new blog ${newBlog.title} added`,
+      // })
+      // setTimeout(() => {
+      //   setNotification(null)
+      // }, 5000)
     } catch (error) {
       console.log(error)
     }
     // blogFormRef.current.toggleVisibility()
   }
-
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       const blogsInDB = await blogService.getAll()
       blogsInDB.sort((blog1, blog2) => blog2.likes - blog1.likes)
       setBlogs(blogsInDB)
     })()
-  }, [])
-  useEffect(() => {
+
     const loggedUser = JSON.parse(window.localStorage.getItem('loggedUser'))
     if (loggedUser) {
       setUser(loggedUser)
@@ -45,20 +48,22 @@ const App = () => {
     }
   }, [])
 
+  // useEffect(() => {
+  //   const loggedUser = JSON.parse(window.localStorage.getItem('loggedUser'))
+  //   if (loggedUser) {
+  //     setUser(loggedUser)
+  //     loginService.setToken(loggedUser.token)
+  //   }
+  // }, [])
+
   if (user === null) {
-    return (
-      <LoginForm
-        setUser={setUser}
-        notification={notification}
-        setNotification={setNotification}
-      />
-    )
+    return <LoginForm setUser={setUser} />
   }
 
   return (
     <div>
       <h2>blogs</h2>
-      <Notification notification={notification} />
+      <Notification />
       <div>
         <LogOutButton username={user.name} setUser={setUser} />
       </div>
