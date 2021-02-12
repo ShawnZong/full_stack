@@ -8,6 +8,8 @@ import {
 } from '../reducers/notificationReducer'
 import { userLogin, userLogout } from '../reducers/loginReducer'
 
+import { Button } from 'react-bootstrap'
+
 const LoginForm = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -59,9 +61,9 @@ const LoginForm = () => {
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button id="loginButton" type="submit">
+        <Button id="loginButton" type="submit">
           login
-        </button>
+        </Button>
       </form>
     </div>
   )
@@ -79,7 +81,7 @@ const LogOutButton = ({ username }) => {
   }
   return (
     <div>
-      {username} logged in <button onClick={handleLogout}>logout</button>
+      {username} logged in <Button onClick={handleLogout}>logout</Button>
     </div>
   )
 }

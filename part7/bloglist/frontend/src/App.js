@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react'
 // components
 import { Blog, NewBlogForm } from './components/Blog'
-import { LoginForm, LogOutButton } from './components/LoginOut'
+import { LoginForm } from './components/LoginOut'
 import { Notification } from './components/Notification'
 import Togglable from './components/Togglable'
-import { UserList } from './components/User'
+import { UserList, IndiUserView } from './components/User'
 import { Menu } from './components/Menu'
 
 // redux
@@ -14,11 +14,11 @@ import { initBlogs, insertBlog } from './reducers/blogsReducer'
 import { initUser } from './reducers/loginReducer'
 
 // react router
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, useRouteMatch } from 'react-router-dom'
 
 const App = () => {
   const dispatch = useDispatch()
-  // const userList = useSelector((state) => state.userList)
+  const userList = useSelector((state) => state.userList)
   const blogs = useSelector((state) => state.blogs)
   const user = useSelector((state) => state.user)
   useEffect(() => {
@@ -27,6 +27,10 @@ const App = () => {
   }, [])
   // const [user, setUser] = useState(null)
   const blogFormRef = useRef()
+  const match = useRouteMatch('/users/:id')
+  const userToBeViewd = match
+    ? userList.find((tmp) => tmp.id === match.params.id)
+    : null
 
   const addBlog = async (newBlog) => {
     try {
@@ -44,25 +48,20 @@ const App = () => {
       </div>
     )
   }
-  // const match = useRouteMatch('/users/:id')
-  // const userToBeViewd = match
-  //   ? userList.find((tmp) => tmp.id === match.params.id)
-  //   : null
-  // console.log(userToBeViewd)
+
   return (
     <div className="container">
       <Menu />
       <h2>Blog App</h2>
       <Notification />
       <Switch>
+        <Route path="/users/:id">
+          <IndiUserView user={userToBeViewd} />
+        </Route>
         <Route path="/users">
           <UserList />
         </Route>
         <Route path="/">
-          <div>
-            <LogOutButton username={user.name} />
-          </div>
-
           <div>
             <Togglable
               showLabel="create new blog"

@@ -1,16 +1,23 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
+
+// components
 import Togglable from './Togglable'
+
+// redux
 import { useDispatch } from 'react-redux'
 import { removeBlog } from '../reducers/blogsReducer'
+
+// style
+import { Button } from 'react-bootstrap'
 
 const LikesButton = ({ likes, handleLikes }) => {
   return (
     <div>
       likes {likes}{' '}
-      <button id="likesButton" onClick={handleLikes}>
+      <Button id="likesButton" onClick={handleLikes}>
         like
-      </button>
+      </Button>
     </div>
   )
 }
@@ -44,9 +51,9 @@ const Blog = ({ index, blog, user }) => {
         <LikesButton likes={blogLikes} handleLikes={handleLikes} />
         <p>{blog.user.name}</p>
         {blog.user.id === user.id ? (
-          <button onClick={handleRemove}>remove</button>
+          <Button onClick={handleRemove}>remove</Button>
         ) : blog.user === user.id ? (
-          <button onClick={handleRemove}>remove</button>
+          <Button onClick={handleRemove}>remove</Button>
         ) : (
           ''
         )}
@@ -101,9 +108,9 @@ const NewBlogForm = ({ addBlog }) => {
             onChange={({ target }) => setUrl(target.value)}
           />
         </div>
-        <button id="newBlogButton" type="submit">
+        <Button id="newBlogButton" type="submit">
           create
-        </button>
+        </Button>
       </form>
     </div>
   )
