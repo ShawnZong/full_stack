@@ -30,7 +30,7 @@ const userLogout = () => {
   }
 }
 
-const userReducer = (state = null, action) => {
+const loginReducer = (state = null, action) => {
   switch (action.type) {
     case 'RESET_USER':
       return null
@@ -41,5 +41,5 @@ const userReducer = (state = null, action) => {
   }
 }
 
-export default userReducer
+export default loginReducer
 export { initUser, userLogin, userLogout }

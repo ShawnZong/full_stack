@@ -6,7 +6,7 @@ import {
   setNotification,
   resetNotification,
 } from '../reducers/notificationReducer'
-import { userLogin, userLogout } from '../reducers/userReducer'
+import { userLogin, userLogout } from '../reducers/loginReducer'
 
 const LoginForm = () => {
   const [username, setUsername] = useState('')

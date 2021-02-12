@@ -3,10 +3,11 @@ import { Blog, NewBlogForm } from './components/Blog'
 import { LoginForm, LogOutButton } from './components/LoginOut'
 import { Notification } from './components/Notification'
 import Togglable from './components/Togglable'
+import { UserList } from './components/User'
 import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
 import { initBlogs, insertBlog } from './reducers/blogsReducer'
-import { initUser } from './reducers/userReducer'
+import { initUser } from './reducers/loginReducer'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -38,11 +39,14 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div className="container">
       <h2>blogs</h2>
       <Notification />
       <div>
         <LogOutButton username={user.name} />
+      </div>
+      <div>
+        <UserList />
       </div>
       <div>
         <Togglable
