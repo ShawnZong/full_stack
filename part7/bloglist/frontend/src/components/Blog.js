@@ -11,6 +11,9 @@ import { removeBlog } from '../reducers/blogsReducer'
 // style
 import { Button } from 'react-bootstrap'
 
+// react router
+import { Link, useHistory } from 'react-router-dom'
+
 const LikesButton = ({ likes, handleLikes }) => {
   return (
     <div>
@@ -21,7 +24,14 @@ const LikesButton = ({ likes, handleLikes }) => {
     </div>
   )
 }
-const Blog = ({ index, blog, user }) => {
+const Blog = ({ blog }) => {
+  return (
+    <Link to={`/blogs/${blog.id}`}>
+      {blog.title} {blog.author}
+    </Link>
+  )
+}
+const ToggledBlog = ({ index, blog, user }) => {
   const dispatch = useDispatch()
   const [blogLikes, setBlogLikes] = useState(blog.likes)
   const blogStyle = {
@@ -58,6 +68,49 @@ const Blog = ({ index, blog, user }) => {
           ''
         )}
       </Togglable>
+    </div>
+  )
+}
+
+const BlogDetail = ({ blog, user }) => {
+  const history = useHistory()
+
+  const dispatch = useDispatch()
+  const [blogLikes, setBlogLikes] = useState(blog.likes)
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5,
+  }
+  const handleLikes = async () => {
+    await blogService.update(blog.id, {
+      likes: blogLikes + 1,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url,
+    })
+    setBlogLikes(blogLikes + 1)
+  }
+  const handleRemove = async () => {
+    dispatch(removeBlog(blog))
+    history.goBack()
+    // history.push('/')
+  }
+  return (
+    <div className="blogDetail" style={blogStyle}>
+      {blog.title} {blog.author}
+      <p>{blog.url}</p>
+      <LikesButton likes={blogLikes} handleLikes={handleLikes} />
+      <p>{blog.user.name}</p>
+      {blog.user.id === user.id ? (
+        <Button onClick={handleRemove}>remove</Button>
+      ) : blog.user === user.id ? (
+        <Button onClick={handleRemove}>remove</Button>
+      ) : (
+        ''
+      )}
     </div>
   )
 }
@@ -115,4 +168,4 @@ const NewBlogForm = ({ addBlog }) => {
     </div>
   )
 }
-export { Blog, NewBlogForm, LikesButton }
+export { Blog, BlogDetail, NewBlogForm, LikesButton, ToggledBlog }

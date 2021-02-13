@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react'
+// components
+import { ReturnButton } from './ReturnButton'
 
 // redux
 import { useDispatch, useSelector } from 'react-redux'
 import { initUserList } from '../reducers/userListReducer'
 
 // react router
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 // style
-import { Table, ListGroup, Button } from 'react-bootstrap'
+import { Table, ListGroup } from 'react-bootstrap'
 
 const UserList = () => {
   const dispatch = useDispatch()
@@ -24,6 +26,7 @@ const UserList = () => {
   return (
     <div>
       <h2>Users</h2>
+      <ReturnButton />
       <Table striped>
         <thead>
           <tr>
@@ -47,24 +50,15 @@ const UserList = () => {
 }
 
 const IndiUserView = ({ user }) => {
-  const history = useHistory()
-  const handleReturn = () => {
-    history.push('/users')
-  }
   if (!user) {
     return null
   }
 
   return (
     <div>
-      <h1>
-        {user.username}
-        <Button onClick={handleReturn} variant="secondary">
-          return
-        </Button>
-      </h1>
+      <h1>{user.username}</h1>
       <h2>added blogs</h2>
-
+      <ReturnButton />
       <ListGroup>
         {user.blogs.map((blog) => (
           <ListGroup.Item key={blog.id}>{blog.title}</ListGroup.Item>

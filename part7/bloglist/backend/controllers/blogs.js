@@ -66,12 +66,37 @@ blogsRouter.delete('/:id', async (request, response) => {
 blogsRouter.put('/:id', async (request, response) => {
   const decodedToken = getDecodedToken(request, response);
   const blog = await Blog.findById(request.params.id);
-
+  const tmpBlog = request.body;
+  if (
+    tmpBlog.likes !== blog.likes &&
+    tmpBlog.title === blog.title &&
+    tmpBlog.author === blog.author &&
+    tmpBlog.url === blog.url
+  ) {
+    // console.log(tmpBlog);
+    const newBlog = {
+      title: tmpBlog.title,
+      author: tmpBlog.author,
+      url: tmpBlog.url,
+      likes: tmpBlog.likes,
+    };
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      request.params.id,
+      newBlog,
+      {
+        new: true,
+        runValidators: true,
+        context: 'query',
+      },
+    );
+    return response.json(updatedBlog.toJSON());
+  }
   if (blog.user.toString() !== decodedToken.id.toString()) {
-    response.status(401).json({ error: 'token missing or invalid token' });
+    return response
+      .status(401)
+      .json({ error: 'token missing or invalid token' });
   }
 
-  const tmpBlog = request.body;
   // console.log(tmpBlog);
   const newBlog = {
     title: tmpBlog.title,
@@ -84,6 +109,6 @@ blogsRouter.put('/:id', async (request, response) => {
     runValidators: true,
     context: 'query',
   });
-  response.json(updatedBlog.toJSON());
+  return response.json(updatedBlog.toJSON());
 });
 module.exports = blogsRouter;

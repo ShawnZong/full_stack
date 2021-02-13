@@ -1,11 +1,12 @@
 import React, { useEffect, useRef } from 'react'
 // components
-import { Blog, NewBlogForm } from './components/Blog'
+import { Blog, BlogDetail, NewBlogForm } from './components/Blog'
 import { LoginForm } from './components/LoginOut'
 import { Notification } from './components/Notification'
 import Togglable from './components/Togglable'
 import { UserList, IndiUserView } from './components/User'
 import { Menu } from './components/Menu'
+import { ReturnButton } from './components/ReturnButton'
 
 // redux
 import { useDispatch, useSelector } from 'react-redux'
@@ -27,9 +28,14 @@ const App = () => {
   }, [])
   // const [user, setUser] = useState(null)
   const blogFormRef = useRef()
-  const match = useRouteMatch('/users/:id')
-  const userToBeViewd = match
-    ? userList.find((tmp) => tmp.id === match.params.id)
+  const userMatch = useRouteMatch('/users/:id')
+  const userToBeViewd = userMatch
+    ? userList.find((tmp) => tmp.id === userMatch.params.id)
+    : null
+
+  const blogMatch = useRouteMatch('/blogs/:id')
+  const blogToBeViewd = blogMatch
+    ? blogs.find((tmp) => tmp.id === blogMatch.params.id)
     : null
 
   const addBlog = async (newBlog) => {
@@ -57,6 +63,10 @@ const App = () => {
       <h2>Blog App</h2>
       <Notification />
       <Switch>
+        <Route path="/blogs/:id">
+          <ReturnButton />
+          <BlogDetail blog={blogToBeViewd} user={user} />
+        </Route>
         <Route path="/users/:id">
           <IndiUserView user={userToBeViewd} />
         </Route>
@@ -72,8 +82,10 @@ const App = () => {
             >
               <NewBlogForm addBlog={addBlog} />
             </Togglable>
-            {blogs.map((blog, index) => (
-              <Blog key={blog.id} index={index} blog={blog} user={user} />
+            {blogs.map((tmpblog) => (
+              <div key={tmpblog.id}>
+                <Blog key={tmpblog.id} blog={tmpblog} />
+              </div>
             ))}
           </div>
         </Route>

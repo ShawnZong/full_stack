@@ -15,11 +15,11 @@ const insertBlog = (newBlog) => {
   }
 }
 
-const removeBlog = (blog, index) => {
+const removeBlog = (blog) => {
   return async (dispatch) => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
       await blogService.deleteBlog(blog.id)
-      dispatch({ type: 'REMOVE_BLOG', index: index })
+      dispatch({ type: 'REMOVE_BLOG', id: blog.id })
     }
   }
 }
@@ -31,8 +31,9 @@ const blogsReducer = (state = [], action) => {
     case 'ADD_BLOG':
       return state.concat(action.blog)
     case 'REMOVE_BLOG': {
-      const blogsTmp = [...state]
-      blogsTmp.splice(action.index, 1)
+      const blogsTmp = state.filter((tmp) => tmp.id !== action.id)
+      // const blogsTmp = [...state]
+      // blogsTmp.splice(action.index, 1)
       return blogsTmp
     }
     default:

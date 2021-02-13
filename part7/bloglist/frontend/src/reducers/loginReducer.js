@@ -24,8 +24,6 @@ const userLogin = (credential) => {
     } catch (exception) {
       dispatch(setNotification('wrong username or password', 'danger', 5))
     }
-
-    console.log('im bbb')
   }
 }
 
