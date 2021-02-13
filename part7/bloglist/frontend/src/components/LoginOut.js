@@ -29,6 +29,7 @@ const LoginForm = () => {
         <Form.Group>
           <Form.Label>Username:</Form.Label>
           <Form.Control
+            required
             id="loginUsername"
             type="text"
             value={username}
@@ -37,6 +38,7 @@ const LoginForm = () => {
           />
           <Form.Label>Password:</Form.Label>
           <Form.Control
+            required
             id="loginPwd"
             type="password"
             value={password}

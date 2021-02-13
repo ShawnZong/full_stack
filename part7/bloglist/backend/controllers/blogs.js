@@ -33,7 +33,11 @@ blogsRouter.get('/:id', async (request, response) => {
 
 blogsRouter.post('/:id/comments', async (request, response) => {
   const blog = await Blog.findById(request.params.id);
-  blog.comments = blog.comments.concat(request.body);
+  if (!blog.comments) {
+    blog.comments = [];
+  }
+
+  blog.comments = blog.comments.concat(request.body.comment);
 
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
     new: true,

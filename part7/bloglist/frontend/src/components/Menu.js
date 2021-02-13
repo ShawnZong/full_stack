@@ -4,10 +4,6 @@ import { Link } from 'react-router-dom'
 import { LogOutButton } from './LoginOut'
 import { useSelector } from 'react-redux'
 
-const padding = {
-  padding: 5,
-}
-
 const Menu = () => {
   const user = useSelector((state) => state.user)
 
@@ -18,14 +14,10 @@ const Menu = () => {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="mr-auto">
             <Nav.Link href="#" as="span">
-              <Link style={padding} to="/">
-                blogs
-              </Link>
+              <Link to="/">blogs</Link>
             </Nav.Link>
             <Nav.Link href="#" as="span">
-              <Link style={padding} to="/users">
-                users
-              </Link>
+              <Link to="/users">users</Link>
             </Nav.Link>
             <Nav.Link href="#" as="span">
               {user ? (

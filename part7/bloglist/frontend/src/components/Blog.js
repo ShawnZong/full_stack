@@ -3,13 +3,14 @@ import blogService from '../services/blogs'
 
 // components
 import Togglable from './Togglable'
+import { CommentSection } from './Comment'
 
 // redux
 import { useDispatch } from 'react-redux'
 import { removeBlog } from '../reducers/blogsReducer'
 
 // style
-import { Button, Form } from 'react-bootstrap'
+import { Button, Form, Card } from 'react-bootstrap'
 
 // react router
 import { Link, useHistory } from 'react-router-dom'
@@ -17,7 +18,7 @@ import { Link, useHistory } from 'react-router-dom'
 const LikesButton = ({ likes, handleLikes }) => {
   return (
     <div>
-      likes {likes}{' '}
+      Likes: {likes}{' '}
       <Button id="likesButton" onClick={handleLikes}>
         like
       </Button>
@@ -77,13 +78,7 @@ const BlogDetail = ({ blog, user }) => {
 
   const dispatch = useDispatch()
   const [blogLikes, setBlogLikes] = useState(blog.likes)
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-  }
+
   const handleLikes = async () => {
     await blogService.update(blog.id, {
       likes: blogLikes + 1,
@@ -96,21 +91,39 @@ const BlogDetail = ({ blog, user }) => {
   const handleRemove = async () => {
     dispatch(removeBlog(blog))
     history.goBack()
-    // history.push('/')
   }
   return (
-    <div className="blogDetail" style={blogStyle}>
-      {blog.title} {blog.author}
-      <p>{blog.url}</p>
-      <LikesButton likes={blogLikes} handleLikes={handleLikes} />
-      <p>{blog.user.name}</p>
-      {blog.user.id === user.id ? (
-        <Button onClick={handleRemove}>remove</Button>
-      ) : blog.user === user.id ? (
-        <Button onClick={handleRemove}>remove</Button>
-      ) : (
-        ''
-      )}
+    <div>
+      <Card>
+        <Card.Header>
+          <LikesButton likes={blogLikes} handleLikes={handleLikes} />
+        </Card.Header>
+        <Card.Body>
+          <blockquote className="blockquote mb-0">
+            <p> {blog.title} </p>
+            <footer className="blockquote-footer">
+              <cite title="Source Title">
+                {blog.author}
+                {'      '}{' '}
+              </cite>
+            </footer>
+          </blockquote>
+          {blog.user.id === user.id ? (
+            <Button onClick={handleRemove}>remove</Button>
+          ) : blog.user === user.id ? (
+            <Button onClick={handleRemove}>remove</Button>
+          ) : (
+            ''
+          )}
+        </Card.Body>
+        <Card.Footer>
+          <small className="text-muted">
+            Added by {blog.user.name} | URL: {blog.url}
+          </small>
+        </Card.Footer>
+      </Card>
+
+      <CommentSection comments={blog.comments} />
     </div>
   )
 }
@@ -134,6 +147,7 @@ const NewBlogForm = ({ addBlog }) => {
         <Form.Group>
           <Form.Label>Title:</Form.Label>
           <Form.Control
+            required
             id="title"
             type="text"
             value={title}
@@ -142,6 +156,7 @@ const NewBlogForm = ({ addBlog }) => {
           />
           <Form.Label>Author:</Form.Label>
           <Form.Control
+            required
             id="author"
             type="text"
             value={author}
@@ -150,6 +165,7 @@ const NewBlogForm = ({ addBlog }) => {
           />
           <Form.Label>URL</Form.Label>
           <Form.Control
+            required
             id="url"
             type="text"
             value={url}

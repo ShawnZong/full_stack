@@ -17,6 +17,8 @@ import { initUser } from './reducers/loginReducer'
 // react router
 import { Switch, Route, useRouteMatch } from 'react-router-dom'
 
+// style
+import { ListGroup } from 'react-bootstrap'
 const App = () => {
   const dispatch = useDispatch()
   const userList = useSelector((state) => state.userList)
@@ -26,6 +28,7 @@ const App = () => {
     dispatch(initBlogs())
     dispatch(initUser())
   }, [])
+
   // const [user, setUser] = useState(null)
   const blogFormRef = useRef()
   const userMatch = useRouteMatch('/users/:id')
@@ -59,37 +62,47 @@ const App = () => {
 
   return (
     <div className="container">
-      <Menu />
-      <h2>Blog App</h2>
-      <Notification />
-      <Switch>
-        <Route path="/blogs/:id">
-          <ReturnButton />
-          <BlogDetail blog={blogToBeViewd} user={user} />
-        </Route>
-        <Route path="/users/:id">
-          <IndiUserView user={userToBeViewd} />
-        </Route>
-        <Route path="/users">
-          <UserList />
-        </Route>
-        <Route path="/">
-          <div>
-            <Togglable
-              showLabel="create new blog"
-              hideLabel="cancel"
-              ref={blogFormRef}
-            >
-              <NewBlogForm addBlog={addBlog} />
-            </Togglable>
-            {blogs.map((tmpblog) => (
-              <div key={tmpblog.id}>
-                <Blog key={tmpblog.id} blog={tmpblog} />
-              </div>
-            ))}
-          </div>
-        </Route>
-      </Switch>
+      <div className="center">
+        <Menu />
+        <h2>Blog App</h2>
+        <Notification />
+        <Switch>
+          <Route path="/blogs/:id">
+            <ReturnButton />
+            <BlogDetail blog={blogToBeViewd} user={user} />
+          </Route>
+          <Route path="/users/:id">
+            <IndiUserView user={userToBeViewd} />
+          </Route>
+          <Route path="/users">
+            <UserList />
+          </Route>
+          <Route path="/">
+            <div>
+              <Togglable
+                showLabel="create new blog"
+                hideLabel="cancel"
+                ref={blogFormRef}
+              >
+                <NewBlogForm addBlog={addBlog} />
+              </Togglable>
+              <ListGroup as="ul">
+                <ListGroup.Item as="li" variant="info">
+                  Blogs
+                </ListGroup.Item>
+                {blogs.map((tmpblog) => (
+                  <div key={tmpblog.id}>
+                    <ListGroup.Item as="li" key={tmpblog.id}>
+                      {' '}
+                      <Blog key={tmpblog.id} blog={tmpblog} />
+                    </ListGroup.Item>
+                  </div>
+                ))}
+              </ListGroup>
+            </div>
+          </Route>
+        </Switch>
+      </div>
     </div>
   )
 }
