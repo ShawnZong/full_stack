@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux'
 import { removeBlog } from '../reducers/blogsReducer'
 
 // style
-import { Button } from 'react-bootstrap'
+import { Button, Form } from 'react-bootstrap'
 
 // react router
 import { Link, useHistory } from 'react-router-dom'
@@ -130,41 +130,37 @@ const NewBlogForm = ({ addBlog }) => {
 
   return (
     <div>
-      <form onSubmit={handleCreate}>
-        <div>
-          title:
-          <input
+      <Form onSubmit={handleCreate}>
+        <Form.Group>
+          <Form.Label>Title:</Form.Label>
+          <Form.Control
             id="title"
             type="text"
             value={title}
             name="Title"
             onChange={({ target }) => setTitle(target.value)}
           />
-        </div>
-        <div>
-          author:
-          <input
+          <Form.Label>Author:</Form.Label>
+          <Form.Control
             id="author"
             type="text"
             value={author}
             name="Author"
             onChange={({ target }) => setAuthor(target.value)}
           />
-        </div>
-        <div>
-          url:
-          <input
+          <Form.Label>URL</Form.Label>
+          <Form.Control
             id="url"
             type="text"
             value={url}
             name="Url"
             onChange={({ target }) => setUrl(target.value)}
           />
-        </div>
-        <Button id="newBlogButton" type="submit">
-          create
-        </Button>
-      </form>
+          <Button id="newBlogButton" type="submit">
+            create
+          </Button>
+        </Form.Group>
+      </Form>
     </div>
   )
 }

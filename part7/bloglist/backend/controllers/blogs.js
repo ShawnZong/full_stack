@@ -30,6 +30,19 @@ blogsRouter.get('/:id', async (request, response) => {
   });
   response.json(blog.toJSON());
 });
+
+blogsRouter.post('/:id/comments', async (request, response) => {
+  const blog = await Blog.findById(request.params.id);
+  blog.comments = blog.comments.concat(request.body);
+
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
+    new: true,
+    runValidators: true,
+    context: 'query',
+  });
+  return response.json(updatedBlog.toJSON());
+});
+
 blogsRouter.post('/', async (request, response) => {
   const decodedToken = getDecodedToken(request, response);
   const user = await User.findById(decodedToken.id);
@@ -63,6 +76,7 @@ blogsRouter.delete('/:id', async (request, response) => {
   // console.log(request.params.id);
   response.status(204).end();
 });
+
 blogsRouter.put('/:id', async (request, response) => {
   const decodedToken = getDecodedToken(request, response);
   const blog = await Blog.findById(request.params.id);
