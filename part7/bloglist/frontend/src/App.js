@@ -35,7 +35,9 @@ const App = () => {
   const addBlog = async (newBlog) => {
     try {
       dispatch(insertBlog(newBlog))
-      dispatch(setNotification(`a new blog ${newBlog.title} added`, 'green', 5))
+      dispatch(
+        setNotification(`a new blog ${newBlog.title} added`, 'success', 5),
+      )
     } catch (error) {
       console.log(error)
     }

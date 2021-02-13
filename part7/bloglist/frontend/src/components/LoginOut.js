@@ -2,10 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Notification } from '../components/Notification'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import {
-  setNotification,
-  resetNotification,
-} from '../reducers/notificationReducer'
+import { resetNotification } from '../reducers/notificationReducer'
 import { userLogin, userLogout } from '../reducers/loginReducer'
 
 import { Button } from 'react-bootstrap'
@@ -21,19 +18,7 @@ const LoginForm = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    try {
-      dispatch(userLogin({ username: username, password: password }))
-      // const returnedUser = await loginService.login({
-      //   username: username,
-      //   password: password,
-      // })
-      // window.localStorage.setItem('loggedUser', JSON.stringify(returnedUser))
-      // loginService.setToken(returnedUser.token)
-      // setUser(returnedUser)
-    } catch (exception) {
-      console.log(exception)
-      dispatch(setNotification('wrong username or password', 'red', 5))
-    }
+    dispatch(userLogin({ username: username, password: password }))
   }
 
   return (

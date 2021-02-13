@@ -1,4 +1,5 @@
 import loginService from '../services/login'
+import { setNotification } from './notificationReducer'
 
 const initUser = () => {
   return async (dispatch) => {
@@ -12,13 +13,19 @@ const initUser = () => {
 
 const userLogin = (credential) => {
   return async (dispatch) => {
-    const returnedUser = await loginService.login({
-      username: credential.username,
-      password: credential.password,
-    })
-    window.localStorage.setItem('loggedUser', JSON.stringify(returnedUser))
-    loginService.setToken(returnedUser.token)
-    dispatch({ type: 'SET_USER', user: returnedUser })
+    try {
+      const returnedUser = await loginService.login({
+        username: credential.username,
+        password: credential.password,
+      })
+      window.localStorage.setItem('loggedUser', JSON.stringify(returnedUser))
+      loginService.setToken(returnedUser.token)
+      dispatch({ type: 'SET_USER', user: returnedUser })
+    } catch (exception) {
+      dispatch(setNotification('wrong username or password', 'danger', 5))
+    }
+
+    console.log('im bbb')
   }
 }
 
